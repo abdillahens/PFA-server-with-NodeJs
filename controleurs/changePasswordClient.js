@@ -1,14 +1,7 @@
 const connection = require('../dba/connectionDB');
 const mysql = require('mysql');
 
-// const connect = connection.connect((error)=>{
-//     if(error){
-//         console.log(error);
-//     }
-//     else{
-//         console.log("connected success");
-//     }
-//     });
+
 
 var changePWDClient =  (req,res)=>{
     const {id,password} = req.body;
