@@ -16,13 +16,6 @@ var checkLogin = async function(req,res){
     ////  check  admin table data first bacause it is the small one
 
    try{
-    //    if( req.body.email==="admin" && req.body.password === "admin"){
-
-        
-    //     req.body.role='super admin';
-    //      const accessToken = jwt.sign(req.body,process.env.ACCESS_TOKEN_SECRET);
-    //      return res.status(200).json({accessToken:accessToken});
-    //    }
 
    var adm =await checkAdmin(req,res);
     adm = JSON.parse(JSON.stringify(adm)); // parse the query response from database into string
@@ -30,7 +23,7 @@ var checkLogin = async function(req,res){
    if(adm !=null){
  
     console.log(adm)
-       adm[0].PWD = "";
+       adm[0].password = "";
        adm[0].role='admin';
         const accessToken = jwt.sign(adm[0],process.env.ACCESS_TOKEN_SECRET);
         res.status(200).json({accessToken:accessToken,role : "admin"});
@@ -45,7 +38,7 @@ var checkLogin = async function(req,res){
         console.log(specialiste);
 
         if(specialiste !=null && specialiste[0].isConfirmed){
-            specialiste[0].PWD = "";
+            specialiste[0].password = "";
             specialiste[0].role='specialiste';
             const accessToken = jwt.sign(specialiste[0],process.env.ACCESS_TOKEN_SECRET);
             res.status(200).json({accessToken:accessToken,role : "specialiste"});
@@ -60,7 +53,7 @@ var checkLogin = async function(req,res){
              console.log(client[0].isConfirmed);
              if(client !=null  && client[0].isConfirmed){
                 client[0].role = 'client';
-                client[0].PWD = '';
+                client[0].password = '';
                 const accessToken = jwt.sign(client[0],process.env.ACCESS_TOKEN_SECRET);
                 res.status(200).json({accessToken:accessToken,role : "client"});
              }
