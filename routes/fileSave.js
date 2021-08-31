@@ -29,7 +29,16 @@ const uploadCV = multer({ storage: storageCV })
 
 const storageImg = multer.diskStorage({
   destination: (req, file, callBack) => {
-      callBack(null, 'uploads/img')
+      callBack(null, 'uploads/img/client')
+  },
+  filename: (req, file, callBack) => {
+      //Error 
+      callBack(null, `${req.query.id}_${file.originalname}`)
+  }
+})
+const storageImgSpecialiste = multer.diskStorage({
+  destination: (req, file, callBack) => {
+      callBack(null, 'uploads/img/specialiste')
   },
   filename: (req, file, callBack) => {
       //Error 
@@ -51,7 +60,7 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
   }
 
   let sql =  "update client set picture=? where id=?";
-  let values = [[`http://localhost:5000/uploadFile/${req.query.id}_${file.originalname}`],[req.query.id] ];
+  let values = [[`http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`],[req.query.id] ];
   connection.query(sql,values,(error,result,fields)=>{
 
   if(error){
@@ -59,11 +68,12 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
        return res.status(404).send(error);
        // i have to cancel the sign up
   }
-  return res.json({src : `http://localhost:5000/uploadFile/${req.query.id}_${file.originalname}`});
+  
+  return res.json({src : `http://localhost:5000uploadFileClient/${req.query.id}_${file.originalname}`});
 
 })
 } );
-const uploadImgSpecialiste = multer({ storage: storageImg })
+const uploadImgSpecialiste = multer({ storage: storageImgSpecialiste })
 
 router.post('/img/specialiste',uploadImgSpecialiste.single('file'),(req, res, next) => {
   console.log(req.body);
@@ -76,7 +86,7 @@ router.post('/img/specialiste',uploadImgSpecialiste.single('file'),(req, res, ne
     return next(error)
   }
   let sql =  "update specialiste set picture=? where id=?";
-let values = [[`http://localhost:5000/uploadFile/${req.query.id}_${file.originalname}`],[req.query.id] ];
+let values = [[`http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`],[req.query.id] ];
 connection.query(sql,values,(error,result,fields)=>{
 
 if(error){
@@ -84,8 +94,7 @@ if(error){
      return res.status(404).send(error);
      // i have to cancel the sign up
 }
-return res.json({src : `http://localhost:5000/uploadFile/${req.query.id}_${file.originalname}`});
-
+return res.json({src : `http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`});
 })
  
 } );

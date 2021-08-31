@@ -41,6 +41,7 @@ var google_Login = (req,res)=>{
       }
       verify()
       .then((client)=>{
+        // console.log(client)
         let sql = `select * from client where idGoogle= ${mysql.escape(client.id)}` ;
         connection.query(sql,(error,result,fields)=>{
              if(error){
@@ -61,14 +62,17 @@ var google_Login = (req,res)=>{
            else{
              console.log("new account google")
             console.log(client.picture)
-            let sql = "insert into client(nom,prenom,email,profile,isConfirmed,idGoogle) values ?";
+            let sql = "insert into client(nom,prenom,email,picture,isConfirmed,idGoogle) values ?";
             let values = [[client.nom, client.prenom, client.email,client.picture,true,client.id]];
             connection.query(sql, [values], (error, result, fields) => {
                 if(error){
                     console.log(error)
                     return res.send(error);
                } 
+           
             client.role="client" ;
+            client.id=result.insertId;
+            console.log(client)
             const accessToken = jwt.sign(client,process.env.ACCESS_TOKEN_SECRET);
             res.status(200).json({accessToken:accessToken,role:"client"});
 

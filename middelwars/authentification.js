@@ -24,6 +24,7 @@ function authentification(req,res,next){
       return res.status(404).send('hacker')
   };
   let sql = ""
+  console.log(user);
   switch(user.role){
     case "client" :  sql = `select * from client where id= ${mysql.escape(user.id)}` ; break;
     case "specialiste" : sql = `select * from specialiste where id= ${mysql.escape(user.id)}` ; break;
@@ -36,7 +37,7 @@ if(error){
    console.log("error in query");
    reject(error);
 }
-
+// console.log(result);
 newUser = JSON.parse(JSON.stringify(result)); // parse the query response from database into string
 newUser[0].password = "";
 newUser[0].role=user.role;

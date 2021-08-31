@@ -14,8 +14,8 @@ const mysql = require('mysql');
 
 var updateDataSpecialiste =  (req,res)=>{
 
-    const {id,nom,prenom,sexe,date_naissance,email,tele,specialite,password} = req.body;
-        let sql = `update specialiste set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},specialite=${mysql.escape(specialite)}   ,email = ${mysql.escape(email)},password=${mysql.escape(password)} where id=${mysql.escape(id)} ` ;
+    const {id,nom,prenom,sexe,date_naissance,email,tele,specialite,adresse,password} = req.body;
+        let sql = `update specialiste set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},specialite=${mysql.escape(specialite)} ,adresse=${mysql.escape(adresse)}  ,email = ${mysql.escape(email)},password=${mysql.escape(password)} where id=${mysql.escape(id)} ` ;
         connection.query(sql,(error,result,fields)=>{
      if(error){
          console.log(error);

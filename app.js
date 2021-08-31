@@ -47,8 +47,8 @@ app.get('/',auth,(req,res)=>{
     res.status(200).json(req.user);
 });
 
-app.use('/uploadFile',express.static('uploads/img'));
-
+app.use('/uploadFileClient',express.static('uploads/img/client'));
+app.use('/uploadFileSpecialiste',express.static('uploads/img/specialiste'));
 app.post('/login-google',google_Login);
 
 app.post('/confirm',confirmer,(req,res)=>{ 
