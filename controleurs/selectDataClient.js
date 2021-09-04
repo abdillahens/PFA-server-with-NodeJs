@@ -20,7 +20,7 @@ var selectDataClient =  (req,res)=>{
         return  res.status(400).send(error);
      }
      else{
-         console.log(result);
+        //  console.log(result);
         return res.status(200).json(result);
      }
     })    

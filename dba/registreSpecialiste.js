@@ -27,11 +27,9 @@ var checkRegistre = function(req,res){
              console.log(error);
              return res.status(404).send(error);
         }
-
-        
         const ConfirmToken = jwt.sign({nom, prenom, sexe, date_naissance, email, tele, specialite,role:"specialiste"}, process.env.CONFIRM_TOKEN_SECRET );
         sendConfirm("Gmail" , email , `http://localhost:4200/acceuil/${ConfirmToken}`);
-        return res.status(200).json({message:"please verify your email specialiste address to get access to your account",id :result.insertId});
+        return res.status(200).json({message:"Veulliez verifier votre email adresse pour acceder à votre compte",id :result.insertId});
          
     });
 

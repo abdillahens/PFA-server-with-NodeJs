@@ -22,7 +22,7 @@ var checkAdmin = async (req,res)=>{
         let sql = `select * from admin where email= ${mysql.escape(email)} and password = ${mysql.escape(password)}` ;
         connection.query(sql,(error,result,fields)=>{
           if(error){
-              console.log("error in query");
+              console.log(error);
               reject(error);
           }
           else{
