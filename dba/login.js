@@ -30,7 +30,6 @@ var checkLogin = async function(req,res){
    }
 
    else{  
-       
        try{ 
         ////  check  aspecialiste table data second bacause it is the small one after admin
         var specialiste = await checkSpecialiste(req,res);
@@ -50,7 +49,6 @@ var checkLogin = async function(req,res){
              client = JSON.parse(JSON.stringify(client)); // parse the query response from database into string
              console.log(client);
              console.log("client works");
-             console.log(client[0].isConfirmed);
              if(client !=null  && client[0].isConfirmed){
                 client[0].role = 'client';
                 client[0].password = '';

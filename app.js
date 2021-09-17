@@ -30,6 +30,7 @@ const connect = connection.connect((error) => {
         console.log("connected success");
     }
 });
+
 app.get('/download', function(req, res){
     const file = `${__dirname}/uploads/deplomes/aneexees.pdf`;
     res.download(file); // Set disposition and send it.
@@ -54,9 +55,10 @@ app.post('/login-google',google_Login);
 app.post('/confirm',confirmer,(req,res)=>{ 
     // authorization user (same role of sessions) , return user infos (username ,...)
     const accessToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET);
-    res.status(200).json({ accessToken: accessToken });
+    res.status(200).json({ accessToken: accessToken ,role : req.user.role});
     // res.status(200).json(req.user);
-})
+});
+
 app.use('/upload', fileSaveApi);
 app.use('/login',api_login);
 

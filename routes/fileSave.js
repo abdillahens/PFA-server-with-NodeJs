@@ -69,7 +69,7 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
        // i have to cancel the sign up
   }
   
-  return res.json({src : `http://localhost:5000uploadFileClient/${req.query.id}_${file.originalname}`});
+  return res.json({src : `http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`});
 
 })
 } );
