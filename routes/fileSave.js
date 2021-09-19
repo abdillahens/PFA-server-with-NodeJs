@@ -60,7 +60,7 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
   }
 
   let sql =  "update client set picture=? where id=?";
-  let values = [[`http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`],[req.query.id] ];
+  let values = [[`http://80.240.28.95/backend/uploadFileClient/${req.query.id}_${file.originalname}`],[req.query.id] ];
   connection.query(sql,values,(error,result,fields)=>{
 
   if(error){
@@ -69,7 +69,7 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
        // i have to cancel the sign up
   }
   
-  return res.json({src : `http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`});
+  return res.json({src : `http://80.240.28.95/backend/uploadFileClient/${req.query.id}_${file.originalname}`});
 
 })
 } );
@@ -86,7 +86,7 @@ router.post('/img/specialiste',uploadImgSpecialiste.single('file'),(req, res, ne
     return next(error)
   }
   let sql =  "update specialiste set picture=? where id=?";
-let values = [[`http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`],[req.query.id] ];
+let values = [[`http://80.240.28.95/backend/uploadFileSpecialiste/${req.query.id}_${file.originalname}`],[req.query.id] ];
 connection.query(sql,values,(error,result,fields)=>{
 
 if(error){
@@ -94,7 +94,7 @@ if(error){
      return res.status(404).send(error);
      // i have to cancel the sign up
 }
-return res.json({src : `http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`});
+return res.json({src : `http://80.240.28.95/backend/uploadFileSpecialiste/${req.query.id}_${file.originalname}`});
 })
  
 } );
