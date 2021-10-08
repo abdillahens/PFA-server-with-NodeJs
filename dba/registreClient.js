@@ -44,7 +44,7 @@ var checkRegistre = async function (req, res) {
         console.log('the id of this user is '+id)
         // let password='';
         const ConfirmToken = jwt.sign({id,nom, prenom, sexe, date_naissance, email, tele, profession,niveauScolaire,role:"client"}, process.env.CONFIRM_TOKEN_SECRET );
-        sendConfirm("Gmail" , email , `http://80.240.28.95/acceuil/${ConfirmToken}`);
+        sendConfirm("Gmail" , email , `http://localhost:4200/acceuil/${ConfirmToken}`);
         return res.status(200).json({message:"Veulliez verifier votre email adresse pour acceder à votre compte"});
 
     });

@@ -55,8 +55,9 @@ var google_Login = (req,res)=>{
             client[0].role = "client";
             client[0].password = '';
             // console.log(client[0]);
+            client[0].exist=true;
             const accessToken = jwt.sign(client[0],process.env.ACCESS_TOKEN_SECRET);
-            return res.status(200).json({accessToken:accessToken});
+            return res.status(200).json({accessToken:accessToken,user:client[0]});
 
            }
            else{
@@ -72,9 +73,10 @@ var google_Login = (req,res)=>{
            
             client.role="client" ;
             client.id=result.insertId;
-            console.log(client)
+            console.log(client);
+            client.exist=false;
             const accessToken = jwt.sign(client,process.env.ACCESS_TOKEN_SECRET);
-            res.status(200).json({accessToken:accessToken,role:"client"});
+            res.status(200).json({accessToken:accessToken,role:"client",user:client});
 
            }) 
         }

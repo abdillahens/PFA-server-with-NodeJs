@@ -21,6 +21,8 @@ const confirmer = require('./middelwars/confirmer');
 app.use(express.json()); // enable json to receive json data from frontend ;
 app.use(express.urlencoded({extended:false})); // enable http request
 app.use(cors()); 
+const mysql = require('mysql');
+
 const connect = connection.connect((error) => {
 
     if (error) {
@@ -58,6 +60,26 @@ app.post('/confirm',confirmer,(req,res)=>{
     res.status(200).json({ accessToken: accessToken ,role : req.user.role});
     // res.status(200).json(req.user);
 });
+
+app.post('/googleContinue',(req,res)=>{
+
+    let user = req.body;
+    console.log(user)
+    let  sql = `update client set sexe=${mysql.escape(user.sexe)},date_naissance=${mysql.escape(user.date_naissance)} ,numero_tele=${mysql.escape(user.tele)},profession=${mysql.escape(user.profession)} ,adresse = ${mysql.escape(user.adresse)},niveauScolaire=${mysql.escape(user.niveauScolaire)}  where id=${mysql.escape(user.id)} ` ;
+    connection.query(sql,(error,result,fields)=>{
+    if(error){
+            res.status(404).send(error);
+        }
+
+        console.log(result)
+    user.role='client';
+    user.password='';
+    // console.log(client[0]);
+    const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
+    return res.status(200).json({accessToken:accessToken});
+    })
+
+})
 
 app.use('/upload', fileSaveApi);
 app.use('/login',api_login);
