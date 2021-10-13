@@ -6,6 +6,8 @@ const multer = require('multer');
 const path = require("path");
 const xlsxFile = require('read-excel-file/node');
 const Excel = require('exceljs');
+const mysql = require('mysql');
+const { resolve } = require("path");
 //const unzip = require('unzip2');
 //fs.createReadStream('./uploads').pipe(unzip.Extract({ path: 'output/path' }));
 
@@ -67,8 +69,8 @@ const storageImgSpecialiste = multer.diskStorage({
 const uploadImg = multer({ storage: storageImg })
 
 router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
+  try{
   console.log(req.body);
-  
   const file = req.file;
   console.log(file.filename);
   if (!file) {
@@ -76,9 +78,10 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
     error.httpStatusCode = 400
     return next(error)
   }
+  console.log(req.query.id);
 
-  let sql =  "update client set picture=? where id=?";
-  let values = [[`http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`],[req.query.id] ];
+  let sql =  "update User set picture=? where id=?";
+  let values = [[`http://80.240.28.95/backend/uploadFileClient/${req.query.id}_${file.originalname}`],[req.query.id] ];
   connection.query(sql,values,(error,result,fields)=>{
 
   if(error){
@@ -87,15 +90,19 @@ router.post('/img/client',uploadImg.single('file'),(req, res, next) => {
        // i have to cancel the sign up
   }
   
-  return res.json({src : `http://localhost:5000/uploadFileClient/${req.query.id}_${file.originalname}`});
+  return res.json({src : `http://80.240.28.95/backend/uploadFileClient/${req.query.id}_${file.originalname}`});
 
 })
-} );
+}
+catch(e){console.log(e); return res.status(404).send(e);}
+}
+ );
 const uploadImgSpecialiste = multer({ storage: storageImgSpecialiste })
 
 router.post('/img/specialiste',uploadImgSpecialiste.single('file'),(req, res, next) => {
+
+try{
   console.log(req.body);
-  
   const file = req.file;
   console.log(file.filename);
   if (!file) {
@@ -103,8 +110,8 @@ router.post('/img/specialiste',uploadImgSpecialiste.single('file'),(req, res, ne
     error.httpStatusCode = 400
     return next(error)
   }
-  let sql =  "update specialiste set picture=? where id=?";
-let values = [[`http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`],[req.query.id] ];
+  let sql =  "update User set picture=? where id=?";
+let values = [[`http://80.240.28.95/backend/uploadFileSpecialiste/${req.query.id}_${file.originalname}`],[req.query.id] ];
 connection.query(sql,values,(error,result,fields)=>{
 
 if(error){
@@ -112,13 +119,17 @@ if(error){
      return res.status(404).send(error);
      // i have to cancel the sign up
 }
-return res.json({src : `http://localhost:5000/uploadFileSpecialiste/${req.query.id}_${file.originalname}`});
+return res.json({src : `http://80.240.28.95/backend/uploadFileSpecialiste/${req.query.id}_${file.originalname}`});
 })
  
-} );
+}catch(e){console.log(e);return res.status(404).send(e);}
+}
+
+);
 
 
 router.post('/deplome',upload.single('file'),(req, res, next) => {
+  try{
     // console.log(req.query.id);
     const file = req.file;
     console.log(file.originalname);
@@ -127,7 +138,7 @@ router.post('/deplome',upload.single('file'),(req, res, next) => {
       error.httpStatusCode = 400
       return next(error)
     }
-    let sql =  "update specialiste set deplome=? where id=?";
+    let sql =  "update User set deplome=? where id=?";
         let values = [[`${req.query.id}_${file.originalname}`],[req.query.id] ];
         connection.query(sql,values,(error,result,fields)=>{
 
@@ -138,7 +149,7 @@ router.post('/deplome',upload.single('file'),(req, res, next) => {
         }
 
       })
-      // res.send(file);
+    }catch(e){console.log(e);return res.status(404).send(error);}
   });
 
 router.get('/client/deplome',(req,res)=>{
@@ -175,6 +186,8 @@ router.get('/client/deplome',(req,res)=>{
   //  the full path is /api_registre/client   
 router.post('/cv',uploadCV.single('file'),(req, res, next) => {
   // console.log(req.query.id);
+
+  try{
     const file = req.file;
     console.log(file);
     if (!file) {
@@ -182,7 +195,7 @@ router.post('/cv',uploadCV.single('file'),(req, res, next) => {
       error.httpStatusCode = 400
       return next(error)
     }
-    let sql =  "update specialiste set cv=? where id=?";
+    let sql =  "update User set cv=? where id=?";
     let values = [[`${req.query.id}_${file.originalname}`],[req.query.id] ];
     connection.query(sql,values,(error,result,fields)=>{
 
@@ -194,7 +207,9 @@ router.post('/cv',uploadCV.single('file'),(req, res, next) => {
 
   })
       res.send(file);
-  } ); // the full path is /api_registre/specialiste 
+  } catch(e){console.log(e);return res.status(404).send(e)}
+}
+  ); // the full path is /api_registre/specialiste 
 
     //  the full path is /api_registre/client   
 router.post('/excel/data',excelData.single('file'),(req, res, next) => {
@@ -219,11 +234,39 @@ router.post('/excel/data',excelData.single('file'),(req, res, next) => {
  
 xlsxFile(`./uploads/excel/${file.originalname}`).then((rows) => {
  //console.log(rows);
- console.table(rows);
- rows.forEach((col)=>{
+//  console.table(rows);
+var i=0;
+
+  rows.forEach((col)=>{
+    // console.log(col);
+    //console.log(i)
+    if(i===0){
+      console.log("jjjjj")
+      i=1;return;}
+      
+      var insert = new Promise((resolve,reject)=>{
+    let sql = "insert into User(prenom,nom,email,numero_tele,date_naissance,sexe,niveauScolaire,profession,password,isConfirmed,role) values ?";
+    let values = [[col[1], col[2], col[3], col[4], col[5], col[6], col[7],'Etudiant', col[8],true,'client']];
+    connection.query(sql, [values], (error, result, fields) => {
   
+        if (error) {
+           // console.log(error);
+            console.log("facking eror")
+            reject(error);
+        }
+        i++;
+        resolve(i);
+      })
+
+    })
+    insert.catch((err)=>{console.log(err)})
+  });
+  console.log('the i is' +i);
+
 })
-})
+
+
+
   } ); // the full path is /api_registre/specialiste 
 
 module.exports = router;

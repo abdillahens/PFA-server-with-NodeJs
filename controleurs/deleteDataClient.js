@@ -11,9 +11,10 @@ const mysql = require('mysql');
 //     });
 
 var deleteDataClient =  (req,res)=>{
+    try{
 
   const {id}=req.body;
-        let sql = `delete  from client where id=${mysql.escape(id)}` ;
+        let sql = `delete  from User where id=${mysql.escape(id)}` ;
         connection.query(sql,(error,result,fields)=>{
             
      if(error){
@@ -24,6 +25,7 @@ var deleteDataClient =  (req,res)=>{
          return res.status(200).json(result);
     }
 })
-    }
+    }catch(e){console.log(e);return res.status(400).send(e)}
+}
 
 module.exports = deleteDataClient;

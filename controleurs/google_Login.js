@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 
 var google_Login = (req,res)=>{
 
+  try{
+
 
     const client = new OAuth2Client(process.env.CLIENT_ID_GOOGLE);
     let token = req.body.token;
@@ -42,7 +44,7 @@ var google_Login = (req,res)=>{
       verify()
       .then((client)=>{
         // console.log(client)
-        let sql = `select * from client where idGoogle= ${mysql.escape(client.id)}` ;
+        let sql = `select * from User where idGoogle= ${mysql.escape(client.id)}` ;
         connection.query(sql,(error,result,fields)=>{
              if(error){
                 return res.send(error);
@@ -54,8 +56,7 @@ var google_Login = (req,res)=>{
             client = JSON.parse(JSON.stringify(result));
             client[0].role = "client";
             client[0].password = '';
-            // console.log(client[0]);
-            client[0].exist=true;
+            if(client[0].profession) client[0].exist=true;
             const accessToken = jwt.sign(client[0],process.env.ACCESS_TOKEN_SECRET);
             return res.status(200).json({accessToken:accessToken,user:client[0]});
 
@@ -63,8 +64,8 @@ var google_Login = (req,res)=>{
            else{
              console.log("new account google")
             console.log(client.picture)
-            let sql = "insert into client(nom,prenom,email,picture,isConfirmed,idGoogle) values ?";
-            let values = [[client.nom, client.prenom, client.email,client.picture,true,client.id]];
+            let sql = "insert into User(nom,prenom,email,picture,isConfirmed,role,idGoogle) values ?";
+            let values = [[client.nom, client.prenom, client.email,client.picture,true,'client',client.id]];
             connection.query(sql, [values], (error, result, fields) => {
                 if(error){
                     console.log(error)
@@ -85,6 +86,8 @@ var google_Login = (req,res)=>{
     
 
       }).catch((error)=>{return res.send(error)});
+    }
+    catch(e){console.log(e)}
     
 }
 

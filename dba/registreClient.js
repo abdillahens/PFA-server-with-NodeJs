@@ -4,6 +4,9 @@ const connection = require('./connectionDB');
 const jwt = require('jsonwebtoken');
 var emailCheck = require('../api-Email');
 const sendConfirm = require('../email');
+const bcrypt = require( 'bcrypt' );
+
+const salt = bcrypt.genSaltSync(10);
 
 
 // const connect = connection.connect((error) => {
@@ -18,8 +21,9 @@ const sendConfirm = require('../email');
 
 
 var checkRegistre = async function (req, res) {
+    
 
-    const { nom, prenom, sexe, date_naissance, email, tele, profession, niveauScolaire,password } = req.body;
+    const { nom, prenom, sexe, date_naissance, email, tele,adresse, profession, niveauScolaire,password } = req.body;
     console.log(nom, prenom, sexe, date_naissance, email, tele, profession, password,niveauScolaire,false);
 
 //     var a = await emailCheck(email);
@@ -30,9 +34,9 @@ var checkRegistre = async function (req, res) {
     //         message: "Please provide a valid email address."
     //       });
     // }
-
-    let sql = "insert into client(nom,prenom,sexe,date_naissance,email,numero_tele,profession,niveauScolaire,password,isConfirmed) values ?";
-    let values = [[nom, prenom, sexe, date_naissance, email, tele, profession,niveauScolaire, password,false]];
+    const hash = bcrypt.hashSync(password, salt);
+    let sql = "insert into User(nom,prenom,sexe,date_naissance,email,numero_tele,adresse,profession,niveauScolaire,password,isConfirmed,role) values ?";
+    let values = [[nom, prenom, sexe, date_naissance, email, tele,adresse, profession,niveauScolaire, hash,false,'client']];
     connection.query(sql, [values], (error, result, fields) => {
 
         if (error) {
@@ -41,10 +45,10 @@ var checkRegistre = async function (req, res) {
         }
 
         let id = result.insertId;
-        console.log('the id of this user is '+id)
+        console.log('the id of this user is '+email)
         // let password='';
-        const ConfirmToken = jwt.sign({id,nom, prenom, sexe, date_naissance, email, tele, profession,niveauScolaire,role:"client"}, process.env.CONFIRM_TOKEN_SECRET );
-        sendConfirm("Gmail" , email , `http://localhost:4200/acceuil/${ConfirmToken}`);
+        const ConfirmToken = jwt.sign({id,nom, prenom, sexe, date_naissance, email, tele,adresse, profession,niveauScolaire,role:"client"}, process.env.CONFIRM_TOKEN_SECRET );
+        sendConfirm("Gmail" , email , `http://80.240.28.95/acceuil/${ConfirmToken}`);
         return res.status(200).json({message:"Veulliez verifier votre email adresse pour acceder à votre compte"});
 
     });

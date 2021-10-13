@@ -12,17 +12,23 @@ const mysql = require('mysql');
 //     }
 //     });
 
+const bcrypt = require( 'bcrypt' );
+
+const salt = bcrypt.genSaltSync(10);
+
 var updateDataClient =  (req,res)=>{
 
+    try{
     
     const {id,nom,prenom,sexe,date_naissance,email,tele,profession,adresse,niveauScolaire,password} = req.body;
     
     console.log("the id is " + id);
     console.log(adresse)
     let sql="";
-    if(password)
-         sql = `update client set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},profession=${mysql.escape(profession)}   ,email = ${mysql.escape(email)},adresse = ${mysql.escape(adresse)},niveauScolaire=${mysql.escape(niveauScolaire)} ,password=${mysql.escape(password)} where id=${mysql.escape(id)} ` ;
-        else  sql = `update client set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},profession=${mysql.escape(profession)}   ,email = ${mysql.escape(email)},adresse = ${mysql.escape(adresse)},niveauScolaire=${mysql.escape(niveauScolaire)}  where id=${mysql.escape(id)} ` ;
+    if(password){
+        const hash = bcrypt.hashSync(password, salt);
+         sql = `update User set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},profession=${mysql.escape(profession)}   ,email = ${mysql.escape(email)},adresse = ${mysql.escape(adresse)},niveauScolaire=${mysql.escape(niveauScolaire)} ,password=${mysql.escape(hash)} where id=${mysql.escape(id)} ` ;
+    }else  sql = `update User set nom=${mysql.escape(nom)} ,prenom=${mysql.escape(prenom)} ,sexe=${mysql.escape(sexe)},date_naissance=${mysql.escape(date_naissance)} ,numero_tele=${mysql.escape(tele)},profession=${mysql.escape(profession)}   ,email = ${mysql.escape(email)},adresse = ${mysql.escape(adresse)},niveauScolaire=${mysql.escape(niveauScolaire)}  where id=${mysql.escape(id)} ` ;
         connection.query(sql,(error,result,fields)=>{
      if(error){
          console.log(error);
@@ -32,6 +38,8 @@ var updateDataClient =  (req,res)=>{
         res.status(200).json(result);
      }
     })
+}
+catch(e){console.log(e);res.status(400).send(e);}
 }
 
 

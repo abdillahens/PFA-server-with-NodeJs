@@ -23,10 +23,11 @@ function authentification(req,res,next){
   };
   let sql = "";
 
-  switch(user.role){
-    case "specialiste" : sql = `update specialiste set isConfirmed = 1 where email = ? ` ;
-    case "client" : sql = `update client set isConfirmed = 1 where email = ? ` ;
-  }
+  // switch(user.role){
+  //   case "specialiste" : sql = `update specialiste set isConfirmed = 1 where email = ? ` ;
+  //   case "client" : sql = `update client set isConfirmed = 1 where email = ? ` ;
+  // }
+  sql = `update User set isConfirmed = 1 where email = ? `
   // let sql = `update specialiste set isConfirmed = 1 where email = ? `
   // // let sql = "update client set isConfirmed = 1 where email = 'abo'"
  
@@ -45,6 +46,6 @@ function authentification(req,res,next){
     next();
 
   })
-  }
+}
 
 module.exports = authentification;

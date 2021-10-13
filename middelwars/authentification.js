@@ -26,11 +26,12 @@ function authentification(req, res, next) {
       let sql = ""
       console.log("authentification")
       console.log(user);
-      switch (user.role) {
-        case "client": sql = `select * from client where id= ${mysql.escape(user.id)}`; break;
-        case "specialiste": sql = `select * from specialiste where id= ${mysql.escape(user.id)}`; break;
-        case "admin": sql = `select * from admin where id= ${mysql.escape(user.id)}`; break;
-      }
+      // switch (user.role) {
+      //   case "client": sql = `select * from user where id= ${mysql.escape(user.id)}`; break;
+      //   case "specialiste": sql = `select * user where id= ${mysql.escape(user.id)}`; break;
+      //   case "admin": sql = `select * from user where id= ${mysql.escape(user.id)}`; break;
+      // }
+      sql = `select * from User where id= ${mysql.escape(user.id)}`;
 
       connection.query(sql, (error, result, fields) => {
 

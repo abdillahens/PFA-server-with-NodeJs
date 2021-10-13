@@ -62,10 +62,11 @@ app.post('/confirm',confirmer,(req,res)=>{
 });
 
 app.post('/googleContinue',(req,res)=>{
+    try{
 
     let user = req.body;
     console.log(user)
-    let  sql = `update client set sexe=${mysql.escape(user.sexe)},date_naissance=${mysql.escape(user.date_naissance)} ,numero_tele=${mysql.escape(user.tele)},profession=${mysql.escape(user.profession)} ,adresse = ${mysql.escape(user.adresse)},niveauScolaire=${mysql.escape(user.niveauScolaire)}  where id=${mysql.escape(user.id)} ` ;
+    let  sql = `update User set sexe=${mysql.escape(user.sexe)},date_naissance=${mysql.escape(user.date_naissance)} ,numero_tele=${mysql.escape(user.tele)},profession=${mysql.escape(user.profession)} ,adresse = ${mysql.escape(user.adresse)},niveauScolaire=${mysql.escape(user.niveauScolaire)}  where id=${mysql.escape(user.id)} ` ;
     connection.query(sql,(error,result,fields)=>{
     if(error){
             res.status(404).send(error);
@@ -78,10 +79,12 @@ app.post('/googleContinue',(req,res)=>{
     const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
     return res.status(200).json({accessToken:accessToken});
     })
+}catch(e){console.log(e);res.status(404).send(e);}
 
 })
 
 app.use('/upload', fileSaveApi);
+
 app.use('/login',api_login);
 
 app.use('/registre',api_registre);

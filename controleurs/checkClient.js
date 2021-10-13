@@ -14,6 +14,7 @@ const mysql = require('mysql');
 //     });
 
 var checkClient = async (req,res)=>{
+    try{
 
     return new Promise((resolve,reject)=>{
     const {email,password} = req.body;
@@ -38,6 +39,8 @@ var checkClient = async (req,res)=>{
     })
     
     })
+}
+catch(e){reject(error)}
 }
 // connection.end();
 
