@@ -34,9 +34,10 @@ const connect = connection.connect((error) => {
 });
 
 app.get('/download', function(req, res){
-    const file = `${__dirname}/uploads/deplomes/aneexees.pdf`;
+    const file = `${__dirname}/uploads/apk/apkApp.apk`;
     res.download(file); // Set disposition and send it.
   });
+
 app.get('/select',selectDataClient); // select all client in our systeme to do some update or deleting clients ..
 app.get('/select/specialiste',selectDataSpecialiste); 
 app.post('/delete/client',deleteDataClient); // delete client identified by his id
@@ -50,7 +51,7 @@ app.get('/',auth,(req,res)=>{
     res.status(200).json(req.user);
 });
 
-app.use('/uploadFileClient',express.static('uploads/img/client'));
+app.use('/uploadFileClient',express.static('./uploads/img/client'));
 app.use('/uploadFileSpecialiste',express.static('uploads/img/specialiste'));
 app.post('/login-google',google_Login);
 

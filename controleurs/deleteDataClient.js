@@ -18,7 +18,7 @@ var deleteDataClient =  (req,res)=>{
         connection.query(sql,(error,result,fields)=>{
             
      if(error){
-         console.log("error in query");
+         console.log(error);
          return res.status(400).send(error);
      }
      else{
